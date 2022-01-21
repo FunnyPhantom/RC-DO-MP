@@ -21,7 +21,18 @@ In order to make sure java installed correctly, please run `javac -version` and 
 
 
 ### Build steps
-1. run `./mvnw clean install`
-2. run `java -jar target/users-api-0.0.1-SNAPSHOT.jar`
+1. build the application 
+```
+./mvnw clean install
+```
+2. set environment variables
+```shell
+export JWT_SECRET=my-unique-secret-which-is-the-same-between-services
+export SERVER_PORT=8083
+```
+3. run
+```shell
+java -jar target/users-api-0.0.1-SNAPSHOT.jar
+```
 
 If the service is working correctly, your application must be able to catch requests coming to `http://localhost:8083/` (Although they will fail since they don't have Authorization token.) (Also Assuming the default port (8083) is used.)
