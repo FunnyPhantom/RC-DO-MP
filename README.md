@@ -7,33 +7,24 @@ The app itself is a simple TODO app that additionally authenticates users. I pla
 ## Components
 
 1. [Frontend](/frontend) part is a Javascript application, provides UI. Created with [VueJS](http://vuejs.org)
-2. [Auth API](/auth-api) is written in Go and provides authorization functionality. Generates JWT tokens to be used with other APIs.
-3. [TODOs API](/todos-api) is written with NodeJS, provides CRUD functionality ove user's todo records. Also, it logs "create" and "delete" operations to Redis queue, so they can be later processed by [Log Message Processor](/log-message-processor).
-4. [Users API](/users-api) is a Spring Boot project written in Java. Provides user profiles. Does not provide full CRUD for simplicity, just getting a single user and all users.
-5. [Log Message Processor](/log-message-processor) is a very short queue processor written in Python. It's sole purpose is to read messages from Redis queue and print them to stdout
-6. [Zipkin](https://zipkin.io). Optional 3rd party system that aggregates traces produced by other components.
-
+2. [Auth Service](/auth-api) is written in Go and provides authorization functionality. Generates JWT tokens to be used with other APIs.
+3. [TODOs Service](/todos-api) is written with NodeJS, provides CRUD functionality ove user's todo records. Also, it logs "create" and "delete" operations to Redis queue, so they can be later processed by [Log Message Processor](/log-message-processor).
+4. [Users Service](/users-api) is a Spring Boot project written in Java. Provides user profiles. Does not provide full CRUD for simplicity, just getting a single user and all users.
 Take a look at the components diagram that describes them and their interactions.
 ![microservice-app-example](https://user-images.githubusercontent.com/1905821/34918427-a931d84e-f952-11e7-85a0-ace34a2e8edb.png)
 
-## Use cases
-
-- Evaluate various instruments (monitoring, tracing, you name it): how easy they integrate, do they have any bugs with different languages, etc.
 
 ## How to start
 
-The easiest way is to use `docker-compose`:
+As described above, this app has 4 different services. As visible in diagram above, project dependencies can be described as follows:
+1. There is a Users Service, which does not have any dependency and must be deployed first.
+2. Auth service which depends on Users Service. This must be deployed after Users Service.
+3. Todos Service which depends on Auth Service. This must be deployed after Auth Service.
+4. Frontend which depends on Auth Service. This must be deployed after Auth Service.
 
-```
-docker-compose up --build
-```
 
-Then go to http://127.0.0.1:8080 for web UI. [Zipkin](https://zipkin.io) is available on http://127.0.0.1:9411 by default.
+The guide on how to build and deploy each service is written in the respective component's README.md file.
 
-## Contribution
 
-This is definitely a contrived project, so it can be extended in any way you want. If you have a crazy idea (like RESTful API in Haskell that counts kittens of particular user) - just submit a PR.
 
-## License
 
-MIT
