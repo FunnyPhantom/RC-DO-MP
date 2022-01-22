@@ -1,19 +1,8 @@
 'use strict';
 const cache = require('memory-cache');
-const {Annotation, 
-    jsonEncoder: {JSON_V2}} = require('zipkin');
-
-const OPERATION_CREATE = 'CREATE',
-      OPERATION_DELETE = 'DELETE';
 
 class TodoController {
-    constructor({tracer, redisClient, logChannel}) {
-        this._tracer = tracer;
-        this._redisClient = redisClient;
-        this._logChannel = logChannel;
-    }
 
-    // TODO: these methods are not concurrent-safe
     list (req, res) {
         const data = this._getTodoData(req.user.username)
 
@@ -21,8 +10,6 @@ class TodoController {
     }
 
     create (req, res) {
-        // TODO: must be transactional and protected for concurrent access, but
-        // the purpose of the whole example app it's enough
         const data = this._getTodoData(req.user.username)
         const todo = {
             content: req.body.content,
@@ -33,7 +20,6 @@ class TodoController {
         data.lastInsertedID++
         this._setTodoData(req.user.username, data)
 
-        this._logOperation(OPERATION_CREATE, req.user.username, todo.id)
 
         res.json(todo)
     }
@@ -44,26 +30,14 @@ class TodoController {
         delete data.items[id]
         this._setTodoData(req.user.username, data)
 
-        this._logOperation(OPERATION_DELETE, req.user.username, id)
 
         res.status(204)
         res.send()
     }
 
-    _logOperation (opName, username, todoId) {
-        this._tracer.scoped(() => {
-            const traceId = this._tracer.id;
-            this._redisClient.publish(this._logChannel, JSON.stringify({
-                zipkinSpan: traceId,
-                opName: opName,
-                username: username,
-                todoId: todoId,
-            }))
-        })
-    }
 
     _getTodoData (userID) {
-        var data = cache.get(userID)
+        let data = cache.get(userID)
         if (data == null) {
             data = {
                 items: {

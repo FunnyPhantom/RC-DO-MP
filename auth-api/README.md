@@ -33,10 +33,10 @@ Following users are hardcoded for you:
 
 ## Building and running
 
-### Requirements:
+### Requirements
 * Go 1.17 (link)[https://golang.org/doc/install]
 
-
+### Build steps
 1. Compile application to binary:
 ```
 go build
@@ -55,5 +55,5 @@ export USERS_API_ADDRESS=http://localhost:8083
 ## Usage
 Run this command to see if the service is can authenticate the user correctly:
 ```
- curl -X POST  127.0.0.1:8000/login -d '{"username": "admin","password": "admin"}'
+ curl -X POST  127.0.0.1:8082/login -d '{"username": "admin","password": "admin"}'
 ```

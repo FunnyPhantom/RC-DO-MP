@@ -1,9 +1,7 @@
 # todos-api
 
 This service is written in NodeJS, it provides CRUD operations over TODO entries.
-It keeps all the data in memory. CREATE and DELETE operations are logged by
-sending appropriate message to a Redis queue. The messages are then processed by
-`log-message-processor`.
+It keeps all the data in memory.
 
 Following API endpoints are exposed:
 
@@ -20,33 +18,37 @@ TODO object looks like this:
 }
 ```
 
-Log message looks like this:
-```
-{
-    opName: CREATE,
-    username: username,
-    todoId: 5,
-}
-```
 
 ## Configuration
 
 The service scans environment for variables:
 - `TODO_API_PORT` - the port the service takes.
 - `JWT_SECRET` - secret value for JWT token processing.
-- `REDIS_HOST` - host of Redis
-- `REDIS_PORT` - port of Redis
-- `REDIS_CHANNEL` - channel the processor is going to listen to
 
 ## Building and running
 
-```
+### Requirements
+* NodeJS (Tested with NodeJS 16.13.1). ([install nodejs](https://nodejs.org/en/))
+* Python 2.7 ([install python2](https://www.python.org/downloads/))
+
+
+### Build steps
+1. Install dependencies:
+```shell
 npm install
-JWT_SECRET=foo TODO_API_PORT=8082  npm start
+```
+2. Set Environment variables:
+```shell
+export JWT_SECRET=my-unique-secret-which-is-the-same-between-services
+export TODO_API_PORT=8081
+```
+3. Run the service:
+```shell
+npm start
 ```
 
 ## Usage
 
 ```
- curl -X POST -H "Authorization: Bearer $token" 127.0.0.1:8082/todos -d '{"content": "deal with that"}'
+ curl -X POST -H "Authorization: Bearer $token" 127.0.0.1:8082/todos -d '{"content": "Deploy Frontend"}'
 ```
