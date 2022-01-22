@@ -10,7 +10,7 @@ UI for sample distributed TODO app build with VueJS
 ## Building and running
 
 ### Requirements
-* NodeJS V8.x.x (install nodejs)[https://nodejs.org/en/]
+* NodeJS V8.x.x (Since you need different version of `Node` for building `todos-api` and `frontend`, you'll need to search what is the best way to have multiple version of node which can be switched. I'll leave this part to you to figure out.) :-)
 
 
 ### Build steps
